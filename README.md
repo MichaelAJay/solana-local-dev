@@ -21,28 +21,6 @@ A collection of shell scripts to easily set up and manage a local Solana develop
    ./solana-local check hot
    ```
 
-## 📁 Project Structure
-
-```
-solana-local/
-├── solana-local              # Main wrapper script
-├── scripts/
-│   ├── check-validator.sh    # Validator status checking
-│   ├── wallet-utils.sh       # Wallet creation and management
-│   ├── token-utils.sh        # Token and ATA utilities
-│   ├── init-local-node.sh    # Main initialization script
-│   ├── check-account.sh      # Account information retrieval
-│   ├── get-wallet-info.sh    # Wallet info extraction as JSON
-│   ├── send-sol.sh           # SOL transfer between wallets
-│   ├── send-token.sh         # Token transfer between wallets
-│   └── test-mint.sh          # Test script for validation
-├── owner.json                # Owner wallet keypair (created by init)
-├── ops.json                  # Ops wallet keypair (created by init)
-├── hot.json                  # Hot wallet keypair (created by init)
-├── USDC_mint.txt             # Mock token mint address (created by init)
-└── README.md                 # This file
-```
-
 ## 🛠 Commands
 
 ### Main Wrapper Script
@@ -251,54 +229,6 @@ When you run `./solana-local init`, the following is set up:
 - SPL Token CLI installed
 - Local Solana test validator running
 
-## 🔄 Comparison: Shell Scripts vs .zsh_local Functions
-
-### Shell Scripts Approach (Current)
-
-**Advantages:**
-- ✅ **Modular and organized** - Each script has a specific purpose
-- ✅ **Reusable** - Can be called from other scripts or projects
-- ✅ **Version controllable** - Easy to track changes and collaborate
-- ✅ **Portable** - Works across different shell environments
-- ✅ **Testable** - Each script can be tested independently
-- ✅ **Maintainable** - Clear separation of concerns
-- ✅ **Executable** - Can be run directly without sourcing
-- ✅ **Professional** - Standard approach for production scripts
-- ✅ **Robust** - Advanced error handling and recovery
-
-**Disadvantages:**
-- ❌ **More files** - Multiple files to manage
-- ❌ **Slightly more complex** - Need to understand script structure
-
-### .zsh_local Functions Approach (Previous)
-
-**Advantages:**
-- ✅ **Single file** - Everything in one place
-- ✅ **Always available** - Functions loaded in shell session
-- ✅ **Quick access** - No need to specify paths
-
-**Disadvantages:**
-- ❌ **Monolithic** - All code in one large file
-- ❌ **Shell-specific** - Tied to zsh configuration
-- ❌ **Hard to maintain** - Difficult to organize and debug
-- ❌ **Not portable** - Can't easily share or reuse
-- ❌ **Version control issues** - Changes mixed with other shell config
-- ❌ **Testing difficulties** - Hard to test individual components
-- ❌ **Limited error handling** - Basic error handling capabilities
-
-## 🎯 Recommendation
-
-**The shell scripts approach is significantly better** for the following reasons:
-
-1. **Professional Development Practices** - Follows standard conventions
-2. **Maintainability** - Much easier to update and debug individual components
-3. **Collaboration** - Other developers can easily understand and contribute
-4. **Reusability** - Scripts can be used in CI/CD, other projects, etc.
-5. **Testing** - Each component can be tested independently
-6. **Documentation** - Clear structure makes documentation easier
-7. **Robustness** - Advanced error handling and recovery mechanisms
-8. **Reliability** - Handles edge cases and validator restarts gracefully
-
 ## 🔍 Troubleshooting
 
 ### Validator Not Running
@@ -417,19 +347,3 @@ These scripts are designed for robust local development with features that make 
 - **Team development** - Consistent environment setup across developers
 - **Testing workflows** - Automated setup and teardown of test environments
 - **Educational purposes** - Clear, well-documented Solana development patterns
-
-## 🆕 New Features
-
-### Transfer Commands
-- **`send-sol`** - Transfer SOL between wallets with balance validation
-- **`send-token`** - Transfer tokens between wallets with ATA management
-- **Comprehensive validation** - Amount checks, balance verification, same-wallet prevention
-- **Smart error handling** - Clear messages and recovery suggestions
-- **Transaction tracking** - Shows signatures and before/after balances
-
-### Enhanced Documentation
-- Complete examples for all transfer scenarios
-- Detailed parameter descriptions
-- Error handling guidance
-
-## Features 
