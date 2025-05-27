@@ -1,0 +1,83 @@
+#!/bin/bash
+
+# Main wrapper script for Solana local development utilities
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Function to show usage
+show_usage() {
+    echo "🚀 Solana Local Development Utilities"
+    echo "====================================="
+    echo ""
+    echo "Usage: $0 <command> [arguments]"
+    echo ""
+    echo "Commands:"
+    echo "  init                    Initialize local Solana node with wallets and tokens"
+    echo "  check <wallet_type>     Check account details (ops, hot, or owner)"
+    echo "  wallet-info <wallet_type> Get wallet info as JSON (ops or hot only)"
+    echo "  send-sol --amount <amount> --from <wallet> --to <wallet>"
+    echo "                          Send SOL between wallets"
+    echo "  send-token --amount <amount> --from <wallet> --to <wallet>"
+    echo "                          Send tokens between wallets"
+    echo "  validator               Check if local validator is running"
+    echo ""
+    echo "Examples:"
+    echo "  $0 init                 # Initialize everything"
+    echo "  $0 check ops            # Check ops wallet"
+    echo "  $0 check hot            # Check hot wallet"
+    echo "  $0 check owner          # Check owner wallet"
+    echo "  $0 wallet-info ops      # Get ops wallet info as JSON"
+    echo "  $0 send-sol --amount 1.5 --from owner --to ops"
+    echo "  $0 send-token --amount 1000 --from owner --to hot"
+    echo "  $0 validator            # Check validator status"
+    echo ""
+    echo "💡 Make sure to start the local validator first:"
+    echo "   solana-test-validator"
+}
+
+# Main command dispatcher
+case "$1" in
+    "init")
+        source "$SCRIPT_DIR/scripts/init-local-node.sh"
+        initializeLocalSolNode
+        ;;
+    "check")
+        if [[ -z "$2" ]]; then
+            echo "❌ Missing wallet type parameter"
+            echo "Usage: $0 check <wallet_type>"
+            echo "Example: $0 check ops"
+            exit 1
+        fi
+        source "$SCRIPT_DIR/scripts/check-account.sh"
+        checkAcct "$2"
+        ;;
+    "wallet-info")
+        if [[ -z "$2" ]]; then
+            echo "❌ Missing wallet type parameter"
+            echo "Usage: $0 wallet-info <wallet_type>"
+            echo "Example: $0 wallet-info ops"
+            exit 1
+        fi
+        "$SCRIPT_DIR/scripts/get-wallet-info.sh" "$2"
+        ;;
+    "send-sol")
+        shift  # Remove the command name
+        "$SCRIPT_DIR/scripts/send-sol.sh" "$@"
+        ;;
+    "send-token")
+        shift  # Remove the command name
+        "$SCRIPT_DIR/scripts/send-token.sh" "$@"
+        ;;
+    "validator")
+        source "$SCRIPT_DIR/scripts/check-validator.sh"
+        check_local_validator
+        ;;
+    "help"|"-h"|"--help"|"")
+        show_usage
+        ;;
+    *)
+        echo "❌ Unknown command: $1"
+        echo ""
+        show_usage
+        exit 1
+        ;;
+esac 
