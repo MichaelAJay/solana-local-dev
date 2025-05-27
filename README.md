@@ -36,6 +36,8 @@ The `solana-local` script provides a unified interface to all functionality:
 - **`init`** - Initialize local Solana node with wallets and tokens
 - **`check <wallet_type>`** - Check account details (ops, hot, or owner)
 - **`wallet-info <wallet_type>`** - Get wallet info as JSON (ops or hot only)
+- **`airdrop <amount> <wallet_type>`** - Airdrop SOL to a wallet
+- **`mint <amount> [token_name]`** - Mint tokens to owner wallet (default: USDC)
 - **`send-sol --amount <amount> --from <wallet> --to <wallet>`** - Send SOL between wallets
 - **`send-token --amount <amount> --from <wallet> --to <wallet>`** - Send tokens between wallets
 - **`validator`** - Check if local validator is running
@@ -55,6 +57,15 @@ The `solana-local` script provides a unified interface to all functionality:
 # Note: Will prompt for confirmation due to private key exposure
 ./solana-local wallet-info ops
 ./solana-local wallet-info hot
+
+# Airdrop SOL to wallets
+./solana-local airdrop 5 ops
+./solana-local airdrop 2.5 hot
+./solana-local airdrop 10 owner
+
+# Mint tokens to owner wallet
+./solana-local mint 1000
+./solana-local mint 500 USDC
 
 # Send SOL between wallets
 ./solana-local send-sol --amount 1.5 --from owner --to ops
@@ -85,6 +96,15 @@ You can also run the scripts directly:
 # Get wallet info as JSON
 ./scripts/get-wallet-info.sh ops
 ./scripts/get-wallet-info.sh hot
+
+# Airdrop SOL to wallets
+./scripts/airdrop.sh 5 ops
+./scripts/airdrop.sh 2.5 hot
+./scripts/airdrop.sh 10 owner
+
+# Mint tokens to owner wallet
+./scripts/mint-tokens.sh 1000
+./scripts/mint-tokens.sh 500 USDC
 
 # Send SOL between wallets
 ./scripts/send-sol.sh --amount 1.5 --from owner --to ops
@@ -200,6 +220,25 @@ When you run `./solana-local init`, the following is set up:
 - Tests wallet file existence and validity
 - Verifies mint authority and on-chain state
 - Provides diagnostic information for troubleshooting
+
+### `airdrop.sh` (New!)
+- Airdrops SOL to any wallet (owner, ops, or hot)
+- Validates amount format (positive numbers only)
+- Checks local validator is running before operation
+- Shows before/after SOL balances and transaction signatures
+- Provides helpful error messages for common issues
+- Handles airdrop limits and invalid addresses gracefully
+- Simple usage: `./scripts/airdrop.sh <amount> <wallet_type>`
+
+### `mint-tokens.sh` (New!)
+- Mints tokens to the owner wallet using owner as mint authority
+- Validates amount format (positive numbers only)
+- Supports any token with existing mint (defaults to USDC)
+- Automatically creates ATA for owner if needed
+- Shows before/after token balances and transaction signatures
+- Handles keypair switching automatically for mint authority
+- Provides detailed error messages and recovery suggestions
+- Simple usage: `./scripts/mint-tokens.sh <amount> [token_name]`
 
 ## ✨ Key Features
 

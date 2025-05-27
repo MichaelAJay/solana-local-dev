@@ -14,6 +14,8 @@ show_usage() {
     echo "  init                    Initialize local Solana node with wallets and tokens"
     echo "  check <wallet_type>     Check account details (ops, hot, or owner)"
     echo "  wallet-info <wallet_type> Get wallet info as JSON (ops or hot only)"
+    echo "  airdrop <amount> <wallet_type> Airdrop SOL to a wallet"
+    echo "  mint <amount> [token_name] Mint tokens to owner wallet (default: USDC)"
     echo "  send-sol --amount <amount> --from <wallet> --to <wallet>"
     echo "                          Send SOL between wallets"
     echo "  send-token --amount <amount> --from <wallet> --to <wallet>"
@@ -26,6 +28,9 @@ show_usage() {
     echo "  $0 check hot            # Check hot wallet"
     echo "  $0 check owner          # Check owner wallet"
     echo "  $0 wallet-info ops      # Get ops wallet info as JSON"
+    echo "  $0 airdrop 5 ops        # Airdrop 5 SOL to ops wallet"
+    echo "  $0 mint 1000            # Mint 1000 USDC to owner wallet"
+    echo "  $0 mint 500 USDC        # Mint 500 USDC to owner wallet"
     echo "  $0 send-sol --amount 1.5 --from owner --to ops"
     echo "  $0 send-token --amount 1000 --from owner --to hot"
     echo "  $0 validator            # Check validator status"
@@ -58,6 +63,27 @@ case "$1" in
             exit 1
         fi
         "$SCRIPT_DIR/scripts/get-wallet-info.sh" "$2"
+        ;;
+    "airdrop")
+        if [[ -z "$2" || -z "$3" ]]; then
+            echo "❌ Missing amount or wallet type parameter"
+            echo "Usage: $0 airdrop <amount> <wallet_type>"
+            echo "Example: $0 airdrop 5 ops"
+            exit 1
+        fi
+        source "$SCRIPT_DIR/scripts/airdrop.sh"
+        airdrop "$2" "$3"
+        ;;
+    "mint")
+        if [[ -z "$2" ]]; then
+            echo "❌ Missing amount parameter"
+            echo "Usage: $0 mint <amount> [token_name]"
+            echo "Example: $0 mint 1000"
+            echo "Example: $0 mint 500 USDC"
+            exit 1
+        fi
+        source "$SCRIPT_DIR/scripts/mint-tokens.sh"
+        mint_tokens "$2" "$3"
         ;;
     "send-sol")
         shift  # Remove the command name
