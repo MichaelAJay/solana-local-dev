@@ -24,6 +24,8 @@ create_or_recover_wallet() {
         if [[ $? -eq 0 ]]; then
             echo "✅ Successfully loaded $wallet_name wallet"
             echo "📍 Wallet address: $address"
+            # No mnemonic available for existing wallets
+            echo "" > "${wallet_name}_mnemonic.txt"
             return 0
         else
             echo "❌ Failed to read $wallet_name wallet"
@@ -32,14 +34,25 @@ create_or_recover_wallet() {
     else
         echo "📝 Creating new wallet: $wallet_name"
         
-        # Generate new keypair and save to file
-        solana-keygen new --outfile "$wallet_file" --no-bip39-passphrase --silent
+        # Generate new keypair and capture the mnemonic
+        # We'll use --no-bip39-passphrase but remove --silent to capture the mnemonic
+        local keygen_output=$(solana-keygen new --outfile "$wallet_file" --no-bip39-passphrase 2>&1)
         
         if [[ $? -eq 0 ]]; then
             echo "✅ Successfully created $wallet_name wallet"
             
             local address=$(solana-keygen pubkey "$wallet_file")
             echo "📍 New wallet address: $address"
+            
+            # Extract and save the mnemonic phrase from the output
+            local mnemonic=$(echo "$keygen_output" | grep -A 1 "Save this seed phrase" | tail -1 | xargs)
+            if [[ -n "$mnemonic" ]]; then
+                echo "$mnemonic" > "${wallet_name}_mnemonic.txt"
+                echo "💾 Mnemonic saved for later display"
+            else
+                echo "⚠️  Could not extract mnemonic phrase"
+                echo "" > "${wallet_name}_mnemonic.txt"
+            fi
             
             # Airdrop some SOL for gas fees
             echo "💰 Airdropping 2 SOL for gas fees..."

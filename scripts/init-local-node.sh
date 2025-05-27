@@ -146,6 +146,31 @@ initializeLocalSolNode() {
     echo "  - Ops: $(get_token_balance "$ops_address" "$mint_address") USDC"
     echo "  - Hot: $(get_token_balance "$hot_address" "$mint_address") USDC"
     echo ""
+    
+    # Display mnemonic phrases for new wallets
+    echo "🔑 MNEMONIC PHRASES (SAVE THESE SECURELY!)"
+    echo "=========================================="
+    echo "⚠️  WARNING: Store these phrases in a secure location!"
+    echo "⚠️  Anyone with these phrases can access your wallets!"
+    echo ""
+    
+    for wallet in "owner" "ops" "hot"; do
+        if [[ -f "${wallet}_mnemonic.txt" ]]; then
+            local mnemonic=$(cat "${wallet}_mnemonic.txt" 2>/dev/null)
+            if [[ -n "$mnemonic" && "$mnemonic" != "" ]]; then
+                echo "🔐 $wallet wallet mnemonic:"
+                echo "   $mnemonic"
+                echo ""
+            else
+                echo "ℹ️  $wallet wallet: Using existing keypair (no mnemonic available)"
+                echo ""
+            fi
+        fi
+    done
+    
+    # Clean up temporary mnemonic files for security
+    rm -f owner_mnemonic.txt ops_mnemonic.txt hot_mnemonic.txt
+    
     echo "✅ All wallets created and funded successfully!"
 }
 

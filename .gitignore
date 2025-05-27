@@ -7,6 +7,9 @@ owner.json
 ops.json
 hot.json
 
+# Mnemonic phrase files (contain seed phrases - NEVER commit these!)
+*_mnemonic.txt
+
 # Token mint configuration files
 *_mint.txt
 USDC_mint.txt
