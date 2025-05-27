@@ -1,0 +1,66 @@
+# Solana Local Development - Generated Files
+# ==========================================
+
+# Wallet keypair files (contain private keys - NEVER commit these!)
+*.json
+owner.json
+ops.json
+hot.json
+
+# Token mint configuration files
+*_mint.txt
+USDC_mint.txt
+
+# Solana test validator data
+test-ledger/
+ledger/
+
+# Solana CLI configuration (may contain sensitive paths)
+.config/
+
+# Development notes and documentation
+notes/
+
+# Logs
+*.log
+validator.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node.js (if any JS tooling is added later)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python (if any Python tooling is added later)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+
+# Rust (if any Rust programs are added later)
+target/
+Cargo.lock 
