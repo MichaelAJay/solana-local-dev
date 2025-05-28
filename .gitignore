@@ -24,6 +24,9 @@ ledger/
 # Development notes and documentation
 notes/
 
+# Internal scripts
+bp-scripts/
+
 # Logs
 *.log
 validator.log
