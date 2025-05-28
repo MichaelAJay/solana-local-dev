@@ -5,6 +5,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/check-validator.sh"
 source "$SCRIPT_DIR/wallet-utils.sh"
 source "$SCRIPT_DIR/token-utils.sh"
+source "$SCRIPT_DIR/airdrop.sh"
 
 # Main function to initialize local Solana node
 initializeLocalSolNode() {
@@ -54,6 +55,34 @@ initializeLocalSolNode() {
         echo "❌ Failed to get wallet addresses"
         return 1
     fi
+    
+    # Check SOL balances and airdrop if needed
+    echo ""
+    echo "💰 Checking SOL Balances"
+    echo "========================"
+    
+    for wallet in "owner" "ops" "hot"; do
+        local address=$(get_wallet_address "$wallet")
+        local balance=$(solana balance "$address" 2>/dev/null | awk '{print $1}')
+        
+        # Convert balance to a number for comparison (handle empty/error cases)
+        if [[ -z "$balance" ]] || ! [[ "$balance" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+            balance="0"
+        fi
+        
+        echo "💰 $wallet wallet balance: $balance SOL"
+        
+        # If balance is less than 1 SOL, airdrop 2 SOL
+        if (( $(echo "$balance < 1" | bc -l) )); then
+            echo "🚁 Airdropping 2 SOL to $wallet wallet..."
+            if ! airdrop "2" "$wallet"; then
+                echo "❌ Failed to airdrop SOL to $wallet wallet"
+                return 1
+            fi
+        else
+            echo "✅ $wallet wallet has sufficient SOL"
+        fi
+    done
     
     # Create token mint
     echo ""
